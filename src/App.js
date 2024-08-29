@@ -1,25 +1,62 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
 
-function App() {
+const init=[
+  ["r", "n", "b", "q", "k", "b", "n", "r"],
+  ["p", "p", "p", "p", "p", "p", "p", "p"],
+  ["", "", "", "", "", "", "", ""],
+  ["", "", "", "", "", "", "", ""],
+  ["", "", "", "", "", "", "", ""],
+  ["", "", "", "", "", "", "", ""],
+  ["P", "P", "P", "P", "P", "P", "P", "P"],
+  ["R", "N", "B", "Q", "K", "B", "N", "R"],
+];
+
+const ChessBoard = () => {
+  const [board, setBoard] = useState(init);
+  const [selectedPiece, setSelectedPiece] = useState(null);
+
+  const handleCellClick = (rowIndex, colIndex) => {
+    if (selectedPiece) {
+     
+      const newBoard = [...board];
+
+      newBoard[selectedPiece.row][selectedPiece.col] = "";
+      newBoard[rowIndex][colIndex] = selectedPiece.piece;
+
+      setBoard(newBoard);
+      setSelectedPiece(null);
+    } 
+    else if (board[rowIndex][colIndex]) {
+     
+      setSelectedPiece({
+        piece: board[rowIndex][colIndex],
+        row: rowIndex,
+        col: colIndex,
+      });
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>CHESS</h1>
+      <h5>Chariot, Horse, Elephant and Soldiers</h5>
+      <table className="chess-board">
+        <tbody>
+          {board.map((row, rowIndex) => (
+            <tr key={rowIndex}>
+              {row.map((cell, colIndex) => (
+                <td key={colIndex} className={(rowIndex + colIndex) % 2 === 0 ? "light" : "dark"}
+                  onClick={() => handleCellClick(rowIndex, colIndex)}>
+                  {cell && <span>{cell}</span>}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
-}
+};
 
-export default App;
+export default ChessBoard;
